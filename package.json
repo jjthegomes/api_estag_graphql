@@ -1,16 +1,26 @@
 {
+<<<<<<< HEAD
   "name": "graphql-estag",
+=======
+  "name": "api_estag_graphql",
+>>>>>>> ff55211affb8a3733bf7686e1e3aeefc4e618f6b
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "nodemon  --exec babel-node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+>>>>>>> ff55211affb8a3733bf7686e1e3aeefc4e618f6b
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
@@ -26,5 +36,11 @@
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "nodemon": "^1.19.1"
+=======
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.4.2",
+    "mongoose": "^5.6.6"
+>>>>>>> ff55211affb8a3733bf7686e1e3aeefc4e618f6b
   }
 }
