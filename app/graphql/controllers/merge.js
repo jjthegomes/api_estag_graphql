@@ -55,8 +55,8 @@ const empresa = async empresaId => {
       ...empresa._doc,
       _id: empresa.id,
       vagas: vagas.bind(this, empresa.vagas),
-      createdAt: dateToString(candidatura._doc.createdAt),
-      updatedAt: dateToString(candidatura._doc.updatedAt)
+      createdAt: dateToString(empresa._doc.createdAt),
+      updatedAt: dateToString(empresa._doc.updatedAt)
     };
   } catch (error) {
     throw error;

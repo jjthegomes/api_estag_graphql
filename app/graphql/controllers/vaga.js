@@ -23,13 +23,13 @@ module.exports = {
       requisitos: args.vagaInput.requisitos,
       jornada: +args.vagaInput.jornada,
       tipo: args.vagaInput.tipo,
-      empresa: ID
+      empresa: args.empresaId
     });
     let vagas;
     try {
       const result = await vaga.save();
       vagas = transformVaga(result);
-      const empresa = await Empresa.findById(ID);
+      const empresa = await Empresa.findById(args.empresaId);
 
       if (!empresa) throw new Error("Empresa not exists.");
 

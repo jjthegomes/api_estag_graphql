@@ -17,8 +17,11 @@ module.exports = {
 
   candidatarVaga: async args => {
     const fetchedVaga = await Vaga.findOne({ _id: args.vagaId });
+
+    if (!fetchedVaga) throw new Error("Vaga not exists.");
+
     const candidatura = new Candidatura({
-      usuario: "5d4a1c27e976bf4154f75bd4",
+      usuario: args.usuarioId,
       vaga: fetchedVaga
     });
     const result = await candidatura.save();

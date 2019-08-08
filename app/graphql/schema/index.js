@@ -85,8 +85,8 @@ module.exports = buildSchema(`
     type RootMutation {
       createUser(userInput: UserInput): Usuario
       createEmpresa(empresaInput: EmpresaInput): Empresa
-      createVaga(vagaInput: VagaInput): Vaga      
-      candidatarVaga(vagaId: ID!): Candidatura!
+      createVaga(empresaId: ID!, vagaInput: VagaInput): Vaga      
+      candidatarVaga(vagaId: ID!, usuarioId: ID!): Candidatura!
       cancelarCandidatura(candidaturaId: ID!): Vaga!
     }
 
