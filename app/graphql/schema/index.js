@@ -6,6 +6,13 @@ module.exports = buildSchema(`
       nome: String!
       email: String!
       senha: String
+      tipo: String
+      genero: String
+      celular: String
+      dataNascimento: String
+      ativo: String
+      fotoPerfil: String   
+      token: String      
       createdAt: String!
       updatedAt: String!
     }
@@ -60,19 +67,40 @@ module.exports = buildSchema(`
       cnpj: String!
       email: String!
       senha: String!
+      telefone: String
+      sobre: String
+      setor: String
+      porte: String
     }
 
      input VagaInput {
       titulo: String!
       requisitos: String!
       tipo: String!
-      jornada: String!
+      jornada: String!     
+      diferencial: String
+      local: String
+      escolaridade: String
+      beneficios: String
+      publica: Boolean
+      descricao: String
+      numeroVagas: String
+      link: String
+      categoria: String
+      cidade: String
+      estado: String
     }
 
     input UserInput {
       nome: String!
       email: String!
       senha: String!
+      tipo: String
+      genero: String
+      celular: String
+      dataNascimento: String
+      ativo: String
+      fotoPerfil: String   
     }
 
     type RootQuery {
@@ -85,8 +113,8 @@ module.exports = buildSchema(`
     type RootMutation {
       createUser(userInput: UserInput): Usuario
       createEmpresa(empresaInput: EmpresaInput): Empresa
-      createVaga(empresaId: ID!, vagaInput: VagaInput): Vaga      
-      candidatarVaga(vagaId: ID!, usuarioId: ID!): Candidatura!
+      createVaga(vagaInput: VagaInput): Vaga      
+      candidatarVaga(vagaId: ID!): Candidatura!
       cancelarCandidatura(candidaturaId: ID!): Vaga!
     }
 
