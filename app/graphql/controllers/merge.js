@@ -1,7 +1,7 @@
 import Usuario from "../../models/usuario";
 import Empresa from "../../models/empresa";
 import Vaga from "../../models/vaga";
-
+import Candidatura from "../../models/candidatura";
 import { dateToString } from "../../helpers/date";
 
 const usuario = async userId => {
@@ -10,7 +10,9 @@ const usuario = async userId => {
     return {
       ...usuario._doc,
       _id: usuario.id,
-      candidaturas: candidaturas.bind(this, usuario.candidaturas)
+      updatedAt: dateToString(usuario._doc.updatedAt),
+      createdAt: dateToString(usuario._doc.createdAt),
+      // candidaturas: candidaturas.bind(this, usuario.candidaturas)
     };
   } catch (error) {
     throw error;
@@ -19,7 +21,7 @@ const usuario = async userId => {
 
 const candidaturas = async candidaturaIds => {
   try {
-    const candidaturas = await Vaga.find({ _id: { $in: candidaturaIds } });
+    const candidaturas = await Candidatura.find({ _id: { $in: candidaturaIds } });
     return candidaturas.map(candidatura => {
       return transformCandidatura(candidatura);
     });
@@ -79,5 +81,21 @@ export const transformVaga = vaga => {
     ...vaga._doc,
     _id: vaga.id,
     empresa: empresa.bind(this, vaga.empresa)
+  };
+};
+
+export const transformUsuario = usuario => {
+  return {
+    ...usuario._doc,
+    _id: usuario.id,
+    candidaturas: candidaturas.bind(this, usuario.candidaturas)
+  };
+};
+
+export const transformEmpresa = empresa => {
+  return {
+    ...empresa._doc,
+    _id: empresa.id,
+    vagas: vagas.bind(this, empresa.vagas)
   };
 };

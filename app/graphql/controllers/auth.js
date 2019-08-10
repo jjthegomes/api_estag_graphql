@@ -1,19 +1,56 @@
 import bcrypt from "bcryptjs";
 import Usuario from "../../models/usuario";
+import Candidatura from "../../models/candidatura"
+import { transformUsuario } from "./merge";
 
 module.exports = {
-  createUser: async args => {
+
+  usuarios: async args => {
+    try {
+      const usuarios = await Usuario.find();
+      return usuarios.map(usuario => {
+        return transformUsuario(usuario);
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  editarUsuario: async args => {
     try {
       const existingUser = await Usuario.findOne({
-        email: args.userInput.email
+        email: args.usuarioInput.email
+      });
+
+      if (!existingUser) throw new Error("Usuario does not exists.");
+
+      const hashedPassword = await bcrypt.hash(args.usuarioInput.senha, 12);
+
+      const usuario = await Usuario.findOneAndUpdate(
+        { _id: existingUser._id },
+        {
+          ...args.usuarioInput,
+          senha: hashedPassword
+        },
+        { new: true });
+
+      return transformUsuario(usuario);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  criarUsuario: async args => {
+    try {
+      const existingUser = await Usuario.findOne({
+        email: args.usuarioInput.email
       });
 
       if (existingUser) throw new Error("Usuario exists already.");
 
-      const hashedPassword = await bcrypt.hash(args.userInput.senha, 12);
+      const hashedPassword = await bcrypt.hash(args.usuarioInput.senha, 12);
       const usuario = new Usuario({
-        nome: args.userInput.nome,
-        email: args.userInput.email,
+        ...args.usuarioInput,
         senha: hashedPassword
       });
       const result = await usuario.save();
@@ -21,5 +58,23 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  }
+  },
+
+  deletarUsuario: async args => {
+    try {
+      const usuario = await Usuario.findById(args.usuarioId);
+
+      if (!usuario) throw new Error("Usuario does not exists");
+
+      const candidaturas = await Candidatura.find({ _id: { $in: usuario.candidaturas } });
+      await candidaturas.map(async candidatura => {
+        await Candidatura.deleteOne({ _id: candidatura._id });
+      });
+
+      await Usuario.deleteOne({ _id: args.usuarioId });
+      return transformUsuario(usuario);
+    } catch (error) {
+      throw error;
+    }
+  },
 };

@@ -3,12 +3,12 @@ import bcrypt from "bcryptjs";
 
 const UsuarioSchema = new mongoose.Schema(
   {
-    //   candidaturas: [
-    //     {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: "Candidatura"
-    //     }
-    //   ],
+    candidaturas: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Candidatura"
+      }
+    ],
     nome: {
       type: String,
       required: true
@@ -67,35 +67,8 @@ const UsuarioSchema = new mongoose.Schema(
         type: Date,
         required: false
       }
-    },
-    trocaEmail: {
-      email: {
-        type: String,
-        required: false,
-        unique: true,
-        lowercase: true
-      },
-      tokenConfirmacao: {
-        type: String,
-        required: false
-      },
-      tokenRecuperacao: {
-        type: String,
-        required: false
-      },
-      dataExpiracao: {
-        type: Date,
-        required: false
-      }
     }
-  },
-  { timestamps: true }
+  }, { timestamps: true }
 );
-
-UsuarioSchema.pre("save", async function(next) {
-  const hash = await bcrypt.hash(this.senha, 10);
-  this.senha = hash;
-  next();
-});
 
 module.exports = mongoose.model("Usuario", UsuarioSchema, "usuarios");

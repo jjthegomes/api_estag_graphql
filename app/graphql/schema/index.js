@@ -3,6 +3,7 @@ import { buildSchema } from "graphql";
 module.exports = buildSchema(`
     type Usuario {
       _id: ID!,
+      candidaturas: [Candidatura!]
       nome: String!
       email: String!
       senha: String
@@ -91,7 +92,7 @@ module.exports = buildSchema(`
       estado: String
     }
 
-    input UserInput {
+    input UsuarioInput {
       nome: String!
       email: String!
       senha: String!
@@ -104,17 +105,24 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
+      usuarios: [Usuario!]!
       empresas: [Empresa!]!
       vagas: [Vaga!]!
-      vagasEmpresa(_id: ID!): [Vaga!]!
       candidaturas: [Candidatura]!
     }
 
     type RootMutation {
-      createUser(userInput: UserInput): Usuario
-      createEmpresa(empresaInput: EmpresaInput): Empresa
-      createVaga(vagaInput: VagaInput): Vaga      
-      candidatarVaga(vagaId: ID!): Candidatura!
+      criarUsuario(usuarioInput: UsuarioInput): Usuario!
+      editarUsuario(usuarioInput: UsuarioInput): Usuario!
+      deletarUsuario(usuarioId: ID!): Usuario!
+
+      criarEmpresa(empresaInput: EmpresaInput): Empresa!
+      deletarEmpresa(empresaId: ID!): Empresa!
+
+      criarVaga(vagaInput: VagaInput, empresaId: ID!): Vaga! 
+      deletarVaga(vagaId: ID!): Vaga!
+
+      candidatarVaga(vagaId: ID!, usuarioId: ID!): Candidatura!
       cancelarCandidatura(candidaturaId: ID!): Vaga!
     }
 

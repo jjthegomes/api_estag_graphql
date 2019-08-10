@@ -16,51 +16,47 @@ module.exports = {
   },
 
   candidatarVaga: async args => {
-    const fetchedVaga = await Vaga.findOne({ _id: args.vagaId });
+    try {
+      const user = await Usuario.findById(args.usuarioId);
+      const fetchedVaga = await Vaga.findById(args.vagaId);
 
-    if (!fetchedVaga) throw new Error("Vaga not exists.");
+      if (!fetchedVaga) throw new Error("Vaga does not exists.");
+      if (!user) throw new Error("User does not exists.");
 
-    const candidatura = new Candidatura({
-      usuario: args.usuarioId,
-      vaga: fetchedVaga
-    });
-    const result = await candidatura.save();
-    return transformCandidatura(result);
+      const candidatura = new Candidatura({
+        usuario: user,
+        vaga: fetchedVaga
+      });
+
+      const result = await candidatura.save();
+
+      user.candidaturas.push(candidatura);
+
+      await user.save();
+
+      return transformCandidatura(result);
+    } catch (error) {
+      throw error;
+    }
   },
-
-  // candidatarVaga: async args => {
-  //   const fetchedVaga = await Vaga.findOne({ _id: args.vagaId });
-  //   const candidatura = new Candidatura({
-  //     usuario: "5d4a1ea1f1d8162be41652f1",
-  //     vaga: fetchedVaga
-  //   });
-
-  //   try {
-  //     const result = await candidatura.save();
-
-  //     const user = await Usuario.findById("5d4a1ea1f1d8162be41652f1");
-
-  //     if (!user) throw new Error("User not exists.");
-
-  //     user.candidaturas.push(candidatura);
-
-  //     await user.save();
-
-  //     return transformCandidatura(result);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
 
   cancelarCandidatura: async args => {
     try {
       const candidatura = await Candidatura.findById(
         args.candidaturaId
       ).populate("vaga");
-      const vaga = transformVaga(candidatura.vaga);
+
+      await Usuario.findOneAndUpdate(
+        { _id: candidatura.usuario },
+        { $pull: { candidaturas: candidatura._id } },
+        { new: true });
+
       await Candidatura.deleteOne({ _id: args.candidaturaId });
+      const vaga = transformVaga(candidatura.vaga);
       return vaga;
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }

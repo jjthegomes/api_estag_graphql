@@ -2,8 +2,6 @@ import Vaga from "../../models/vaga";
 import Empresa from "../../models/empresa";
 import { transformVaga } from "./merge";
 
-const ID = "5d4a1639bb4a5536d0d81713";
-
 module.exports = {
   vagas: async () => {
     try {
@@ -17,7 +15,7 @@ module.exports = {
     }
   },
 
-  createVaga: async args => {
+  criarVaga: async args => {
     const vaga = new Vaga({
       titulo: args.vagaInput.titulo,
       requisitos: args.vagaInput.requisitos,
@@ -39,5 +37,18 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  }
+  },
+
+  deletarVaga: async args => {
+    try {
+      const vaga = await Vaga.findById(args.vagaId);
+
+      if (!vaga) throw new Error("Vaga does not exists");
+
+      await Vaga.deleteOne({ _id: args.vagaId });
+      return transformVaga(vaga);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
