@@ -78,14 +78,14 @@ module.exports = buildSchema(`
       titulo: String!
       requisitos: String!
       tipo: String!
-      jornada: String!     
+      jornada: Int!     
       diferencial: String
       local: String
       escolaridade: String
       beneficios: String
       publica: Boolean
       descricao: String
-      numeroVagas: String
+      numeroVagas: Int
       link: String
       categoria: String
       cidade: String
@@ -104,11 +104,18 @@ module.exports = buildSchema(`
       fotoPerfil: String   
     }
 
+    type AuthData {
+      usuarioId: ID!
+      token: String!
+      tokenExpiration: Int!
+    }
+
     type RootQuery {
       usuarios: [Usuario!]!
       empresas: [Empresa!]!
       vagas: [Vaga!]!
       candidaturas: [Candidatura]!
+      login(email: String!, senha: String!): AuthData!
     }
 
     type RootMutation {
@@ -122,7 +129,7 @@ module.exports = buildSchema(`
       criarVaga(vagaInput: VagaInput, empresaId: ID!): Vaga! 
       deletarVaga(vagaId: ID!): Vaga!
 
-      candidatarVaga(vagaId: ID!, usuarioId: ID!): Candidatura!
+      candidatarVaga(vagaId: ID!): Candidatura!
       cancelarCandidatura(candidaturaId: ID!): Vaga!
     }
 

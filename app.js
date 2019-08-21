@@ -6,7 +6,7 @@ import graphqlHttp from "express-graphql";
 
 import GraphQlSchema from "./app/graphql/schema";
 import GraphQlResolvers from "./app/graphql/controllers";
-
+import isAuth from "./app/middleware/is-auth";
 dotenv.config();
 
 const app = express();
@@ -14,6 +14,8 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(isAuth);
 
 app.use(
   cors({

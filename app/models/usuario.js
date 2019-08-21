@@ -21,8 +21,7 @@ const UsuarioSchema = new mongoose.Schema(
     },
     senha: {
       type: String,
-      required: true,
-      select: false
+      required: true
     },
     tipo: {
       type: String,
@@ -68,7 +67,8 @@ const UsuarioSchema = new mongoose.Schema(
         required: false
       }
     }
-  }, { timestamps: true }
+  },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Usuario", UsuarioSchema, "usuarios");
