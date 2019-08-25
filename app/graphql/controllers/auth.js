@@ -16,6 +16,18 @@ module.exports = {
     }
   },
 
+  usuarioById: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
+    try {
+      const usuario = await Usuario.findOne({ _id: req.usuarioId });
+      if (!usuario) throw new Error("Usuario does not exists.");
+      return transformUsuario(usuario);
+    } catch (error) {
+      throw error;
+    }
+  },
+
   editarUsuario: async args => {
     try {
       const existingUser = await Usuario.findOne({
@@ -68,12 +80,12 @@ module.exports = {
 
       const isEqual = await bcrypt.compare(senha, usuario.senha);
 
-      if (!isEqual) throw new Error("Password does not exist!");
+      if (!isEqual) throw new Error("Password incorrect!");
 
       const token = await jwt.sign(
         { usuarioId: usuario.id, email: usuario.email },
         process.env.AUTH_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "24h" }
       );
 
       return {

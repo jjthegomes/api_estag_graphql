@@ -116,6 +116,7 @@ module.exports = buildSchema(`
       vagas: [Vaga!]!
       candidaturas: [Candidatura]!
       login(email: String!, senha: String!): AuthData!
+      usuarioById: Usuario!
     }
 
     type RootMutation {
