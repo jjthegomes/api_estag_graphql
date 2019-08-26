@@ -106,6 +106,7 @@ module.exports = buildSchema(`
 
     type AuthData {
       usuarioId: ID!
+      usuario: Usuario!
       token: String!
       tokenExpiration: Int!
     }
@@ -116,7 +117,7 @@ module.exports = buildSchema(`
       vagas: [Vaga!]!
       candidaturas: [Candidatura]!
       login(email: String!, senha: String!): AuthData!
-      usuarioById: Usuario!
+      vagaById(id: ID!): Vaga!
     }
 
     type RootMutation {

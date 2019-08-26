@@ -15,12 +15,20 @@ module.exports = {
     }
   },
 
+  vagaById: async args => {
+    try {
+      const vaga = await Vaga.findOne({ _id: args.id });
+      return transformVaga(vaga);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   criarVaga: async args => {
     const vaga = new Vaga({
-      titulo: args.vagaInput.titulo,
-      requisitos: args.vagaInput.requisitos,
+      ...args.vagaInput,
       jornada: +args.vagaInput.jornada,
-      tipo: args.vagaInput.tipo,
       empresa: args.empresaId
     });
     let vagas;
@@ -50,5 +58,5 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 };

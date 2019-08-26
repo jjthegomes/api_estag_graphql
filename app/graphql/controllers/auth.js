@@ -16,18 +16,6 @@ module.exports = {
     }
   },
 
-  usuarioById: async (args, req) => {
-    if (!req.isAuth) throw new Error("Unauthenticated");
-
-    try {
-      const usuario = await Usuario.findOne({ _id: req.usuarioId });
-      if (!usuario) throw new Error("Usuario does not exists.");
-      return transformUsuario(usuario);
-    } catch (error) {
-      throw error;
-    }
-  },
-
   editarUsuario: async args => {
     try {
       const existingUser = await Usuario.findOne({
@@ -89,6 +77,7 @@ module.exports = {
       );
 
       return {
+        usuario: transformUsuario(usuario),
         usuarioId: usuario.id,
         token: token,
         tokenExpiration: 1
