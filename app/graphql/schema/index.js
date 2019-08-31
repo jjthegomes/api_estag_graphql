@@ -1,9 +1,39 @@
 import { buildSchema } from "graphql";
 
 module.exports = buildSchema(`
-    type Usuario {
+    type Cliente {
       _id: ID!,
+      usuario: Usuario!
       candidaturas: [Candidatura!]
+      telefone: String
+      formacaoAcademica: String
+      formacaoProfissional: String
+      habilidades: String
+      experiencia: String
+      endereco: Endereco
+      redeSocial: RedeSocial
+      createdAt: String!
+      updatedAt: String!
+    }
+
+    type RedeSocial {
+      lattes: String!
+      facebook: String!
+      linkedin: String!
+    }
+
+     type Endereco {  
+      cep: String
+      logradouro: String
+      bairro: String
+      cidade: String
+      numero: String
+      uf: String
+      complemento: String
+    }
+
+    type Usuario {
+      _id: ID!,    
       nome: String!
       email: String!
       senha: String
@@ -20,11 +50,12 @@ module.exports = buildSchema(`
     
     type Vaga {
       _id: ID!
-      titulo: String!
+      nome: String!
       requisitos: String!
       diferencial: String
       local: String
       tipo: String!
+      modalidade: String!
       escolaridade: String
       jornada: Float!
       beneficios: String
@@ -32,24 +63,25 @@ module.exports = buildSchema(`
       descricao: String
       numeroVagas: String
       link: String
-      categoria: String
+      area: String
       cidade: String
       estado: String
       empresa: Empresa!
+      dataInicio: String!
+      dataFinal: String!
       createdAt: String!
       updatedAt: String!
     }
     
     type Empresa {
       _id: ID!
+      usuario: Usuario!
       nome: String!
       cnpj: String!
-      email: String!
-      senha: String!
+      email: String!      
       telefone: String
       sobre: String
       setor: String
-      porte: String
       vagas: [Vaga!]
       createdAt: String!
       updatedAt: String!
@@ -58,7 +90,7 @@ module.exports = buildSchema(`
     type Candidatura {
       _id: ID!
       vaga: Vaga!
-      usuario: Usuario!
+      cliente: Cliente!
       createdAt: String!
       updatedAt: String!
     }
@@ -71,13 +103,14 @@ module.exports = buildSchema(`
       telefone: String
       sobre: String
       setor: String
-      porte: String
+      usuario: ID!
     }
 
      input VagaInput {
-      titulo: String!
+      nome: String!
       requisitos: String!
       tipo: String!
+      modalidade: String!
       jornada: Int!     
       diferencial: String
       local: String
@@ -87,9 +120,11 @@ module.exports = buildSchema(`
       descricao: String
       numeroVagas: Int
       link: String
-      categoria: String
+      area: String
       cidade: String
       estado: String
+      dataInicio: String!
+      dataFinal: String!
     }
 
     input UsuarioInput {

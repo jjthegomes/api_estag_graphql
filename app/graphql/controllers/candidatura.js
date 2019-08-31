@@ -34,10 +34,16 @@ module.exports = {
 
       const result = await candidatura.save();
 
-      user.candidaturas.push(candidatura);
+      await Usuario.findOneAndUpdate(
+        { _id: req.usuarioId },
+        { $push: { candidaturas: candidatura._id } },
+        { new: true }
+      );
 
-      await user.save();
+      // user.candidaturas.push(candidatura);
 
+      // await user.save();
+      //enviar email para empresa
       return transformCandidatura(result);
     } catch (error) {
       throw error;
@@ -48,9 +54,7 @@ module.exports = {
     if (!req.isAuth) throw new Error("Unauthenticated");
 
     try {
-      const candidatura = await Candidatura.findById(
-        args.candidaturaId
-      ).populate("vaga");
+      const candidatura = await Candidatura.findById(args.candidaturaId);
 
       await Usuario.findOneAndUpdate(
         { _id: candidatura.usuario },

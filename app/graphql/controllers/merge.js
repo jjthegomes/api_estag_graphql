@@ -11,7 +11,7 @@ const usuario = async userId => {
       ...usuario._doc,
       _id: usuario.id,
       updatedAt: dateToString(usuario._doc.updatedAt),
-      createdAt: dateToString(usuario._doc.createdAt),
+      createdAt: dateToString(usuario._doc.createdAt)
       // candidaturas: candidaturas.bind(this, usuario.candidaturas)
     };
   } catch (error) {
@@ -21,7 +21,9 @@ const usuario = async userId => {
 
 const candidaturas = async candidaturaIds => {
   try {
-    const candidaturas = await Candidatura.find({ _id: { $in: candidaturaIds } });
+    const candidaturas = await Candidatura.find({
+      _id: { $in: candidaturaIds }
+    });
     return candidaturas.map(candidatura => {
       return transformCandidatura(candidatura);
     });
@@ -80,7 +82,11 @@ export const transformVaga = vaga => {
   return {
     ...vaga._doc,
     _id: vaga.id,
-    empresa: empresa.bind(this, vaga.empresa)
+    empresa: empresa.bind(this, vaga.empresa),
+    dataInicio: dateToString(vaga._doc.dataInicio),
+    dataFim: dateToString(vaga._doc.dataFim),
+    updatedAt: dateToString(vaga._doc.updatedAt),
+    createdAt: dateToString(vaga._doc.createdAt)
   };
 };
 

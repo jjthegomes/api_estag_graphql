@@ -2,7 +2,7 @@ import mongoose from "../../database";
 
 const VagaSchema = new mongoose.Schema(
   {
-    titulo: {
+    nome: {
       type: String,
       required: true
     },
@@ -10,28 +10,34 @@ const VagaSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    jornada: {
+      type: Number,
+      required: true,
+      default: 20
+    },
+    modalidade: {
+      type: String,
+      enum: ["presencial", "home office"],
+      default: "presencial",
+      required: true
+    },
+    tipo: {
+      type: String,
+      enum: ["estagio", "emprego"],
+      default: "estagio",
+      required: true
+    },
     diferencial: {
+      type: String,
+      required: false
+    },
+    escolaridade: {
       type: String,
       required: false
     },
     local: {
       type: String,
       required: false
-    },
-    tipo: {
-      type: String,
-      enum: ["presencial", "home office"],
-      default: "presencial",
-      required: true
-    },
-    escolaridade: {
-      type: String,
-      required: false
-    },
-    jornada: {
-      type: Number,
-      required: true,
-      default: 20
     },
     beneficios: {
       type: String,
@@ -41,7 +47,7 @@ const VagaSchema = new mongoose.Schema(
       type: Boolean,
       required: false,
       default: true
-    }, //boolean
+    },
     empresa: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "empresa"
@@ -59,10 +65,10 @@ const VagaSchema = new mongoose.Schema(
       required: false,
       lowercase: true
     },
-    categoria: {
+    area: {
       type: String,
       required: false
-    }, // ou area,
+    },
     cidade: {
       type: String,
       required: false
@@ -70,6 +76,16 @@ const VagaSchema = new mongoose.Schema(
     estado: {
       type: String,
       required: false
+    },
+    dataInicio: {
+      type: Date,
+      required: true,
+      default: new Date()
+    },
+    dataFinal: {
+      type: Date,
+      required: true,
+      default: new Date()
     }
   },
   { timestamps: true }

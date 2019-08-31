@@ -14,11 +14,6 @@ const EmpresaSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    senha: {
-      type: String,
-      required: true,
-      select: false
-    },
     telefone: {
       type: String,
       required: false
@@ -28,7 +23,7 @@ const EmpresaSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "vaga"
       }
-    ], //Array
+    ],
     sobre: {
       type: String,
       required: false
@@ -37,10 +32,9 @@ const EmpresaSchema = new mongoose.Schema(
       type: String,
       required: false
     },
-    porte: {
-      type: String,
-      enum: ["micro", "pequena", "media", "grande"],
-      required: false
+    usuario: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "usuario"
     }
   },
   { timestamps: true }

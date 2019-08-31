@@ -3,12 +3,6 @@ import bcrypt from "bcryptjs";
 
 const UsuarioSchema = new mongoose.Schema(
   {
-    candidaturas: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Candidatura"
-      }
-    ],
     nome: {
       type: String,
       required: true
@@ -59,6 +53,25 @@ const UsuarioSchema = new mongoose.Schema(
     },
     confirmacaoCadastro: {
       token: {
+        type: String,
+        required: false
+      },
+      dataExpiracao: {
+        type: Date,
+        required: false
+      }
+    },
+    trocaEmail: {
+      emailTrocado: {
+        type: String,
+        required: false,
+        lowercase: true
+      },
+      tokenConfirmacao: {
+        type: String,
+        required: false
+      },
+      tokenRecuperacao: {
         type: String,
         required: false
       },
