@@ -23,7 +23,9 @@ const UsuarioSchema = new mongoose.Schema(
     },
     genero: {
       type: String,
-      required: false
+      enum: ["Masculino", "Feminino", "Outro"],
+      default: "Outro",
+      required: true
     },
     celular: {
       type: String,

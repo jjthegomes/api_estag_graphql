@@ -4,6 +4,13 @@ import Vaga from "../../models/vaga";
 import Candidatura from "../../models/candidatura";
 import { dateToString } from "../../helpers/date";
 
+export const validateDate = date => {
+  if (date) {
+    return new Date(date).toISOString();
+  }
+  return new Date().toISOString();
+};
+
 const usuario = async userId => {
   try {
     const usuario = await Usuario.findById(userId);
@@ -83,8 +90,8 @@ export const transformVaga = vaga => {
     ...vaga._doc,
     _id: vaga.id,
     empresa: empresa.bind(this, vaga.empresa),
-    dataInicio: dateToString(vaga._doc.dataInicio),
-    dataFim: dateToString(vaga._doc.dataFim),
+    dataInicio: validateDate(vaga._doc.dataInicio),
+    dataFim: validateDate(vaga._doc.dataFim),
     updatedAt: dateToString(vaga._doc.updatedAt),
     createdAt: dateToString(vaga._doc.createdAt)
   };

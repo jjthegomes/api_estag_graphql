@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Usuario from "../../models/usuario";
 import Candidatura from "../../models/candidatura";
-import { transformUsuario } from "./merge";
+import { transformUsuario, validateDate } from "./merge";
 
 module.exports = {
   usuarios: async args => {
@@ -52,6 +52,7 @@ module.exports = {
       const hashedPassword = await bcrypt.hash(args.usuarioInput.senha, 12);
       const usuario = new Usuario({
         ...args.usuarioInput,
+        dataNascimento: validateDate(args.usuarioInput.dataNascimento),
         senha: hashedPassword
       });
       const result = await usuario.save();
@@ -78,9 +79,8 @@ module.exports = {
 
       return {
         usuario: transformUsuario(usuario),
-        usuarioId: usuario.id,
         token: token,
-        tokenExpiration: 1
+        tokenExpiration: 24
       };
     } catch (error) {
       throw error;
