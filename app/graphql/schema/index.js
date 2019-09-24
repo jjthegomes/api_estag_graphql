@@ -2,7 +2,7 @@ import { buildSchema } from "graphql";
 
 module.exports = buildSchema(`
     type Cliente {
-      _id: ID!,
+      _id: ID!
       usuario: Usuario!
       candidaturas: [Candidatura!]
       telefone: String
@@ -17,9 +17,9 @@ module.exports = buildSchema(`
     }
 
     type RedeSocial {
-      lattes: String!
-      facebook: String!
-      linkedin: String!
+      lattes: String
+      facebook: String
+      linkedin: String
     }
 
      type Endereco {  
@@ -33,7 +33,7 @@ module.exports = buildSchema(`
     }
 
     type Usuario {
-      _id: ID!,    
+      _id: ID! 
       nome: String!
       email: String!
       senha: String
@@ -103,7 +103,6 @@ module.exports = buildSchema(`
       telefone: String
       sobre: String
       setor: String
-      usuario: ID!
     }
 
      input VagaInput {
@@ -139,9 +138,36 @@ module.exports = buildSchema(`
       fotoPerfil: String   
     }
 
-    type AuthData {
-      usuarioId: ID!
+     input ClienteInput {      
+      telefone: String
+      formacaoAcademica: String
+      formacaoProfissional: String
+      habilidades: String
+      experiencia: String
+      endereco: EnderecoInput
+      redeSocial: RedeSocialInput      
+    }
+
+    input RedeSocialInput {
+      lattes: String
+      facebook: String
+      linkedin: String
+    }
+
+    input EnderecoInput {  
+      cep: String
+      logradouro: String
+      bairro: String
+      cidade: String
+      numero: String
+      uf: String
+      complemento: String
+    }
+
+    type AuthData {      
       usuario: Usuario!
+      cliente: Cliente
+      empresa: Empresa
       token: String!
       tokenExpiration: Int!
     }
@@ -150,6 +176,7 @@ module.exports = buildSchema(`
       usuarios: [Usuario!]!
       empresas: [Empresa!]!
       vagas: [Vaga!]!
+      clientes: [Cliente!]!
       candidaturas: [Candidatura]!
       login(email: String!, senha: String!): AuthData!
       vagaById(id: ID!): Vaga!
@@ -158,13 +185,18 @@ module.exports = buildSchema(`
     type RootMutation {
       criarUsuario(usuarioInput: UsuarioInput): Usuario!
       editarUsuario(usuarioInput: UsuarioInput): Usuario!
-      deletarUsuario(usuarioId: ID!): Usuario!
+      deletarUsuario(id: ID!): Usuario!
+
+      criarCliente(clienteInput: ClienteInput): Cliente!
+      editarCliente(clienteInput: ClienteInput): Cliente!
+      deletarCliente(clienteId: ID!, usuarioId: ID!): Cliente!
 
       criarEmpresa(empresaInput: EmpresaInput): Empresa!
+      editarEmpresa(empresaInput: EmpresaInput): Empresa!
       deletarEmpresa(empresaId: ID!): Empresa!
 
       criarVaga(vagaInput: VagaInput, empresaId: ID!): Vaga! 
-      deletarVaga(vagaId: ID!): Vaga!
+      deletarVaga(id: ID!): Vaga!
 
       candidatarVaga(vagaId: ID!): Candidatura!
       cancelarCandidatura(candidaturaId: ID!): Vaga!

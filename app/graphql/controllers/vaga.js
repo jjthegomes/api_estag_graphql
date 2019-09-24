@@ -15,7 +15,9 @@ module.exports = {
     }
   },
 
-  vagaById: async args => {
+  vagaById: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
     try {
       const vaga = await Vaga.findOne({ _id: args.id });
       return transformVaga(vaga);
@@ -25,7 +27,9 @@ module.exports = {
     }
   },
 
-  criarVaga: async args => {
+  criarVaga: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
     const vaga = new Vaga({
       ...args.vagaInput,
       jornada: +args.vagaInput.jornada,
@@ -47,7 +51,8 @@ module.exports = {
     }
   },
 
-  deletarVaga: async args => {
+  deletarVaga: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
     try {
       const vaga = await Vaga.findById(args.vagaId);
 

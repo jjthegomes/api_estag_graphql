@@ -66,6 +66,7 @@ const empresa = async empresaId => {
       ...empresa._doc,
       _id: empresa.id,
       vagas: vagas.bind(this, empresa.vagas),
+      usuario: usuario.bind(this, empresa.usuario),
       createdAt: dateToString(empresa._doc.createdAt),
       updatedAt: dateToString(empresa._doc.updatedAt)
     };
@@ -85,13 +86,23 @@ export const transformCandidatura = candidatura => {
   };
 };
 
+export const transformCliente = cliente => {
+  return {
+    ...cliente._doc,
+    _id: cliente.id,
+    usuario: usuario.bind(this, cliente.usuario),
+    candidaturas: candidaturas.bind(this, usuario.candidaturas),
+    updatedAt: dateToString(cliente._doc.updatedAt),
+    createdAt: dateToString(cliente._doc.createdAt)
+  };
+};
 export const transformVaga = vaga => {
   return {
     ...vaga._doc,
     _id: vaga.id,
     empresa: empresa.bind(this, vaga.empresa),
     dataInicio: validateDate(vaga._doc.dataInicio),
-    dataFim: validateDate(vaga._doc.dataFim),
+    dataFinal: validateDate(vaga._doc.dataFinal),
     updatedAt: dateToString(vaga._doc.updatedAt),
     createdAt: dateToString(vaga._doc.createdAt)
   };
@@ -101,7 +112,6 @@ export const transformUsuario = usuario => {
   return {
     ...usuario._doc,
     _id: usuario.id,
-    candidaturas: candidaturas.bind(this, usuario.candidaturas)
   };
 };
 

@@ -1,5 +1,6 @@
 import Vaga from "../../models/vaga";
-import Usuario from "../../models/usuario";
+import Cliente from "../../models/cliente";
+import Usuario from '../../models/usuario';
 import Candidatura from "../../models/candidatura";
 import { transformCandidatura, transformVaga } from "./merge";
 
@@ -22,20 +23,25 @@ module.exports = {
 
     try {
       const user = await Usuario.findById(req.usuarioId);
+      if (!user) throw new Error("Usuario does not exists.");
+
+      if (user.tipo == 'empresa') throw new Error("Unauthorized");
+
+      const cliente = await Cliente.findOne({ usuario: req.usuarioId });
       const fetchedVaga = await Vaga.findById(args.vagaId);
 
       if (!fetchedVaga) throw new Error("Vaga does not exists.");
-      if (!user) throw new Error("User does not exists.");
+      if (!cliente) throw new Error("Cliente does not exists.");
 
       const candidatura = new Candidatura({
-        usuario: user,
+        cliente: cliente,
         vaga: fetchedVaga
       });
 
       const result = await candidatura.save();
 
-      await Usuario.findOneAndUpdate(
-        { _id: req.usuarioId },
+      await Cliente.findOneAndUpdate(
+        { _id: cliente._id },
         { $push: { candidaturas: candidatura._id } },
         { new: true }
       );
@@ -56,15 +62,15 @@ module.exports = {
     try {
       const candidatura = await Candidatura.findById(args.candidaturaId);
 
-      await Usuario.findOneAndUpdate(
-        { _id: candidatura.usuario },
+      await Cliente.findOneAndUpdate(
+        { _id: candidatura.cliente },
         { $pull: { candidaturas: candidatura._id } },
         { new: true }
       );
 
       await Candidatura.deleteOne({ _id: args.candidaturaId });
-      const vaga = transformVaga(candidatura.vaga);
-      return vaga;
+      const vaga = await Vaga.findById(candidatura.vaga);
+      return transformVaga(vaga);;
     } catch (error) {
       console.log(error);
 
