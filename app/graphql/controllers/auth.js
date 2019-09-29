@@ -4,7 +4,12 @@ import Usuario from "../../models/usuario";
 import Cliente from "../../models/cliente";
 import Empresa from "../../models/empresa";
 
-import { transformUsuario, transformCliente, transformEmpresa, validateDate } from "./merge";
+import {
+  transformUsuario,
+  transformCliente,
+  transformEmpresa,
+  validateDate
+} from "./merge";
 
 module.exports = {
   usuarios: async args => {
@@ -24,7 +29,7 @@ module.exports = {
         email: args.usuarioInput.email
       });
 
-      if (!existingUser) throw new Error("Usuario does not exists.");
+      if (!existingUser) throw new Error("Usuário não existe.");
 
       const hashedPassword = await bcrypt.hash(args.usuarioInput.senha, 12);
 
@@ -74,7 +79,7 @@ module.exports = {
   login: async ({ email, senha }) => {
     try {
       const usuario = await Usuario.findOne({ email: email });
-      if (!usuario) throw new Error("User does not exist!");
+      if (!usuario) throw new Error("User não existe!");
 
       const isEqual = await bcrypt.compare(senha, usuario.senha);
 
@@ -83,14 +88,13 @@ module.exports = {
       let empresa = null;
       let cliente = null;
 
-      if (usuario.tipo == 'empresa') {
+      if (usuario.tipo == "empresa") {
         empresa = await Empresa.findOne({ usuario: usuario._id });
-        if (!empresa) throw new Error("Empresa does not exists!");
+        if (!empresa) throw new Error("Empresa não existe!");
         empresa = transformEmpresa(empresa);
-
       } else {
         cliente = await Cliente.findOne({ usuario: usuario._id });
-        if (!cliente) throw new Error("Empresa does not exists!");
+        if (!cliente) throw new Error("Cliente não existe!");
         cliente = transformCliente(cliente);
       }
 
@@ -118,7 +122,7 @@ module.exports = {
     try {
       const usuario = await Usuario.findById(req.usuarioId);
 
-      if (!usuario) throw new Error("Usuario does not exist");
+      if (!usuario) throw new Error("Usuario não existe");
 
       await Usuario.deleteOne({ _id: req.usuarioId });
       return transformUsuario(usuario);

@@ -5,7 +5,7 @@ import Candidatura from "../../models/candidatura";
 import { transformCliente } from "./merge";
 
 module.exports = {
-  clientes: async  req => {
+  clientes: async req => {
     if (!req.isAuth) throw new Error("Unauthenticated");
     try {
       const clientes = await Cliente.find();
@@ -17,22 +17,35 @@ module.exports = {
     }
   },
 
+  clienteById: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
+    try {
+      const cliente = await Cliente.findOne({ usuario: req.usuarioId });
+      return transformCliente(cliente);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   criarCliente: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
+
     try {
       const existingUser = await Usuario.findById(req.usuarioId);
 
-      if (!existingUser) throw new Error("Usuario does not exists.");
+      if (!existingUser) throw new Error("Usuário não existe.");
 
       const existingCliente = await Cliente.findOne({
-        email: args.clienteInput.email
+        usuario: req.usuarioId
       });
 
       if (existingCliente) throw new Error("Cliente already exists.");
 
       const cliente = new Cliente({
         ...args.clienteInput,
-        usuario: req.usuarioId,
+        usuario: req.usuarioId
       });
       const result = await cliente.save();
       return transformCliente(result);
@@ -47,7 +60,7 @@ module.exports = {
     try {
       const existingUser = await Usuario.findById(req.usuarioId);
 
-      if (!existingUser) throw new Error("Usuario does not exists.");
+      if (!existingUser) throw new Error("Usuário não existe.");
 
       const cliente = await Cliente.findOneAndUpdate(
         { usuario: req.usuarioId },
@@ -66,7 +79,7 @@ module.exports = {
     try {
       const cliente = await Cliente.findById(args.clienteId);
 
-      if (!cliente) throw new Error("Cliente does not exists");
+      if (!cliente) throw new Error("Cliente não existe");
 
       const candidaturas = await Candidatura.find({
         _id: { $in: cliente.candidaturas }
@@ -83,5 +96,5 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 };

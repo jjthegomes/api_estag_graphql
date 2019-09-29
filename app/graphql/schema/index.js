@@ -99,7 +99,6 @@ module.exports = buildSchema(`
       nome: String!
       cnpj: String!
       email: String!
-      senha: String!
       telefone: String
       sobre: String
       setor: String
@@ -180,12 +179,14 @@ module.exports = buildSchema(`
       candidaturas: [Candidatura]!
       login(email: String!, senha: String!): AuthData!
       vagaById(id: ID!): Vaga!
+      clienteById: Cliente!
+      empresaById: Empresa!
     }
 
     type RootMutation {
       criarUsuario(usuarioInput: UsuarioInput): Usuario!
       editarUsuario(usuarioInput: UsuarioInput): Usuario!
-      deletarUsuario(id: ID!): Usuario!
+      deletarUsuario: Usuario!
 
       criarCliente(clienteInput: ClienteInput): Cliente!
       editarCliente(clienteInput: ClienteInput): Cliente!
@@ -195,7 +196,7 @@ module.exports = buildSchema(`
       editarEmpresa(empresaInput: EmpresaInput): Empresa!
       deletarEmpresa(empresaId: ID!): Empresa!
 
-      criarVaga(vagaInput: VagaInput, empresaId: ID!): Vaga! 
+      criarVaga(vagaInput: VagaInput): Vaga! 
       deletarVaga(id: ID!): Vaga!
 
       candidatarVaga(vagaId: ID!): Candidatura!

@@ -17,23 +17,35 @@ module.exports = {
     }
   },
 
+  empresaById: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
+    try {
+      const empresa = await Empresa.findOne({ usuario: req.usuarioId });
+      return transformEmpresa(empresa);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   criarEmpresa: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
 
     try {
       const existingUser = await Usuario.findById(req.usuarioId);
-      if (!existingUser) throw new Error("Usuario does not exists.");
+
+      if (!existingUser) throw new Error("Usuário não existe.");
 
       const existingEmpresa = await Empresa.findOne({
-        email: args.empresaInput.email
+        cnpj: args.empresaInput.cnpj,
+        usuario: req.usuarioId
       });
 
       if (existingEmpresa) throw new Error("Empresa already exists.");
 
-      const hashedPassword = await bcrypt.hash(args.empresaInput.senha, 12);
       const empresa = new Empresa({
         ...args.empresaInput,
-        senha: hashedPassword,
         usuario: req.usuarioId
       });
       const result = await empresa.save();
@@ -51,7 +63,7 @@ module.exports = {
     try {
       const existingUser = await Usuario.findById(req.usuarioId);
 
-      if (!existingUser) throw new Error("Usuario does not exists.");
+      if (!existingUser) throw new Error("Usuário não existe.");
 
       const existingEmpresa = await Empresa.findOne({
         email: args.empresaInput.email
@@ -76,7 +88,7 @@ module.exports = {
     try {
       const empresa = await Empresa.findById(args.empresaId);
 
-      if (!empresa) throw new Error("Empresa does not exists");
+      if (!empresa) throw new Error("Empresa não existe");
 
       const vagas = await Vaga.find({ _id: { $in: empresa.vagas } });
       await vagas.map(async vaga => {
@@ -90,5 +102,5 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-  },
+  }
 };

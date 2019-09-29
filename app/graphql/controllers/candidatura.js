@@ -1,6 +1,6 @@
 import Vaga from "../../models/vaga";
 import Cliente from "../../models/cliente";
-import Usuario from '../../models/usuario';
+import Usuario from "../../models/usuario";
 import Candidatura from "../../models/candidatura";
 import { transformCandidatura, transformVaga } from "./merge";
 
@@ -23,15 +23,15 @@ module.exports = {
 
     try {
       const user = await Usuario.findById(req.usuarioId);
-      if (!user) throw new Error("Usuario does not exists.");
+      if (!user) throw new Error("Usuário não existe.");
 
-      if (user.tipo == 'empresa') throw new Error("Unauthorized");
+      if (user.tipo == "empresa") throw new Error("Unauthorized");
 
       const cliente = await Cliente.findOne({ usuario: req.usuarioId });
       const fetchedVaga = await Vaga.findById(args.vagaId);
 
-      if (!fetchedVaga) throw new Error("Vaga does not exists.");
-      if (!cliente) throw new Error("Cliente does not exists.");
+      if (!fetchedVaga) throw new Error("Vaga não existe.");
+      if (!cliente) throw new Error("Cliente não existe.");
 
       const candidatura = new Candidatura({
         cliente: cliente,
@@ -70,7 +70,7 @@ module.exports = {
 
       await Candidatura.deleteOne({ _id: args.candidaturaId });
       const vaga = await Vaga.findById(candidatura.vaga);
-      return transformVaga(vaga);;
+      return transformVaga(vaga);
     } catch (error) {
       console.log(error);
 
