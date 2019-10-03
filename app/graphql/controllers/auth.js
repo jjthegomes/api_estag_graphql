@@ -54,7 +54,7 @@ module.exports = {
         email: args.usuarioInput.email
       });
 
-      if (existingUser) throw new Error("Usuario exists already.");
+      if (existingUser) throw new Error("Email já cadastrado.");
 
       const hashedPassword = await bcrypt.hash(args.usuarioInput.senha, 12);
       const usuario = new Usuario({
@@ -70,6 +70,15 @@ module.exports = {
         { expiresIn: "72h" }
       );
 
+      const dataExpiracao = new Date();
+      dataExpiracao.setHours(dataExpiracao.getHours() + 1);
+
+      await Usuario.findByIdAndUpdate(usuario.id, {
+        $set: {
+          confirmacaoCadastro: { token, dataExpiracao }
+        }
+      });
+
       return { ...result._doc, senha: null, _id: result.id, token };
     } catch (error) {
       throw error;
@@ -79,11 +88,11 @@ module.exports = {
   login: async ({ email, senha }) => {
     try {
       const usuario = await Usuario.findOne({ email: email });
-      if (!usuario) throw new Error("User não existe!");
+      if (!usuario) throw new Error("E-mail ou senha inválidos!");
 
       const isEqual = await bcrypt.compare(senha, usuario.senha);
 
-      if (!isEqual) throw new Error("Password incorrect!");
+      if (!isEqual) throw new Error("E-mail ou senha inválidos!");
 
       let empresa = null;
       let cliente = null;

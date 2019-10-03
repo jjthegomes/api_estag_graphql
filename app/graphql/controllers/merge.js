@@ -1,4 +1,5 @@
 import Usuario from "../../models/usuario";
+import Cliente from "../../models/cliente";
 import Empresa from "../../models/empresa";
 import Vaga from "../../models/vaga";
 import Candidatura from "../../models/candidatura";
@@ -20,6 +21,22 @@ const usuario = async userId => {
       updatedAt: dateToString(usuario._doc.updatedAt),
       createdAt: dateToString(usuario._doc.createdAt)
       // candidaturas: candidaturas.bind(this, usuario.candidaturas)
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const cliente = async clienteId => {
+  try {
+    const cliente = await Cliente.findById(clienteId);
+    return {
+      ...cliente._doc,
+      _id: cliente.id,
+      updatedAt: dateToString(cliente._doc.updatedAt),
+      createdAt: dateToString(cliente._doc.createdAt),
+      usuario: usuario.bind(this, cliente.usuario),
+      candidaturas: candidaturas.bind(this, cliente.candidaturas)
     };
   } catch (error) {
     throw error;
@@ -79,7 +96,7 @@ export const transformCandidatura = candidatura => {
   return {
     ...candidatura._doc,
     _id: candidatura.id,
-    usuario: usuario.bind(this, candidatura._doc.usuario),
+    cliente: cliente.bind(this, candidatura.cliente),
     vaga: singleVaga.bind(this, candidatura._doc.vaga),
     createdAt: dateToString(candidatura._doc.createdAt),
     updatedAt: dateToString(candidatura._doc.updatedAt)
@@ -91,7 +108,7 @@ export const transformCliente = cliente => {
     ...cliente._doc,
     _id: cliente.id,
     usuario: usuario.bind(this, cliente.usuario),
-    candidaturas: candidaturas.bind(this, usuario.candidaturas),
+    candidaturas: candidaturas.bind(this, cliente.candidaturas),
     updatedAt: dateToString(cliente._doc.updatedAt),
     createdAt: dateToString(cliente._doc.createdAt)
   };
@@ -111,7 +128,7 @@ export const transformVaga = vaga => {
 export const transformUsuario = usuario => {
   return {
     ...usuario._doc,
-    _id: usuario.id,
+    _id: usuario.id
   };
 };
 

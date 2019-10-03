@@ -1,19 +1,21 @@
 import mongoose from "../../database";
 
-const candidaturaSchema = new mongoose.Schema({
-  vaga: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Vaga"
+const candidaturaSchema = new mongoose.Schema(
+  {
+    vaga: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "vaga"
+    },
+    cliente: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "cliente"
+    }
   },
-  cliente: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cliente"
-  }
-}, { timestamps: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model(
-  "Candidatura",
+  "candidatura",
   candidaturaSchema,
   "candidaturas"
 );

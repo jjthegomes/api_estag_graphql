@@ -41,7 +41,7 @@ module.exports = {
         usuario: req.usuarioId
       });
 
-      if (existingCliente) throw new Error("Cliente already exists.");
+      if (existingCliente) throw new Error("Cliente já existe.");
 
       const cliente = new Cliente({
         ...args.clienteInput,
@@ -77,7 +77,9 @@ module.exports = {
   deletarCliente: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
     try {
-      const cliente = await Cliente.findById(args.clienteId);
+      if (!existingUser) throw new Error("Usuário não existe.");
+
+      const cliente = await Cliente.findOne({ usuario: req.usuarioId });
 
       if (!cliente) throw new Error("Cliente não existe");
 
@@ -89,7 +91,7 @@ module.exports = {
         await Candidatura.deleteOne({ _id: candidatura._id });
       });
 
-      await Cliente.deleteOne({ _id: args.clienteId });
+      await Cliente.deleteOne({ _id: cliente._id });
       await Usuario.deleteOne({ _id: req.usuarioId });
 
       return transformCliente(cliente);

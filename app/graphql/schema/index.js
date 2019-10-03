@@ -190,13 +190,14 @@ module.exports = buildSchema(`
 
       criarCliente(clienteInput: ClienteInput): Cliente!
       editarCliente(clienteInput: ClienteInput): Cliente!
-      deletarCliente(clienteId: ID!, usuarioId: ID!): Cliente!
+      deletarCliente: Cliente!
 
       criarEmpresa(empresaInput: EmpresaInput): Empresa!
       editarEmpresa(empresaInput: EmpresaInput): Empresa!
-      deletarEmpresa(empresaId: ID!): Empresa!
+      deletarEmpresa: Empresa!
 
       criarVaga(vagaInput: VagaInput): Vaga! 
+      editarVaga(vagaInput: VagaInput!, id: ID): Vaga! 
       deletarVaga(id: ID!): Vaga!
 
       candidatarVaga(vagaId: ID!): Candidatura!

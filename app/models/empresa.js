@@ -40,6 +40,6 @@ const EmpresaSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Empresa = mongoose.model("Empresa", EmpresaSchema, "empresas");
+const Empresa = mongoose.model("empresa", EmpresaSchema, "empresas");
 
 module.exports = Empresa;

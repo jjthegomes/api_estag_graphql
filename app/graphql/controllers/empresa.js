@@ -42,7 +42,7 @@ module.exports = {
         usuario: req.usuarioId
       });
 
-      if (existingEmpresa) throw new Error("Empresa already exists.");
+      if (existingEmpresa) throw new Error("Empresa já existe.");
 
       const empresa = new Empresa({
         ...args.empresaInput,
@@ -69,7 +69,7 @@ module.exports = {
         email: args.empresaInput.email
       });
 
-      if (existingEmpresa) throw new Error("Empresa already exists.");
+      if (existingEmpresa) throw new Error("Empresa já existe.");
 
       const empresa = await Empresa.findOneAndUpdate(
         { usuario: req.usuarioIdd },
@@ -86,7 +86,11 @@ module.exports = {
   deletarEmpresa: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
     try {
-      const empresa = await Empresa.findById(args.empresaId);
+      const existingUser = await Usuario.findById(req.usuarioId);
+
+      if (!existingUser) throw new Error("Usuário não existe.");
+
+      const empresa = await Empresa.findOne({ usuario: req.usuarioId });
 
       if (!empresa) throw new Error("Empresa não existe");
 
@@ -95,7 +99,7 @@ module.exports = {
         await Vaga.deleteOne({ _id: vaga._id });
       });
 
-      await Empresa.deleteOne({ _id: args.empresaId });
+      await Empresa.deleteOne({ _id: empresa._id });
       await Usuario.deleteOne({ _id: req.usuarioId });
 
       return transformEmpresa(empresa);

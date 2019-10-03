@@ -91,4 +91,6 @@ const VagaSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Vaga", VagaSchema, "vagas");
+const Vaga = mongoose.model("vaga", VagaSchema, "vagas");
+
+module.exports = Vaga;

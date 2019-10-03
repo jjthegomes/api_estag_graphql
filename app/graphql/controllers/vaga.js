@@ -1,6 +1,5 @@
 import Vaga from "../../models/vaga";
 import Empresa from "../../models/empresa";
-import Usuario from "../../models/usuario";
 import { transformVaga } from "./merge";
 
 module.exports = {
@@ -30,12 +29,11 @@ module.exports = {
 
   criarVaga: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
-    try {
-      const user = await Usuario.findById(req.usuarioId);
-      if (!user) throw new Error("Usuário não existe.");
 
-      if (user.tipo == "cliente") throw new Error("Unauthorized");
+    try {
       const empresa = await Empresa.findOne({ usuario: req.usuarioId });
+
+      if (!empresa) throw new Error("Nenhuma empresa encontrada.");
 
       const vaga = new Vaga({
         ...args.vagaInput,
@@ -59,14 +57,32 @@ module.exports = {
     }
   },
 
+  editarVaga: async (args, req) => {
+    if (!req.isAuth) throw new Error("Unauthenticated");
+
+    try {
+      const empresa = await Empresa.findOne({ usuario: req.usuarioId });
+
+      if (!empresa) throw new Error("Nenhuma empresa encontrada.");
+
+      const vaga = await Vaga.findOneAndUpdate(
+        { _id: args.id },
+        { $set: { ...args.vagaInput } },
+        { new: true }
+      );
+
+      return transformVaga(vaga);
+    } catch (error) {
+      throw error;
+    }
+  },
+
   deletarVaga: async (args, req) => {
     if (!req.isAuth) throw new Error("Unauthenticated");
     try {
-      const vaga = await Vaga.findById(args.vagaId);
-
+      const vaga = await Vaga.findOneAndDelete({ _id: args.id });
       if (!vaga) throw new Error("Vaga não existe");
 
-      await Vaga.deleteOne({ _id: args.vagaId });
       return transformVaga(vaga);
     } catch (error) {
       throw error;
