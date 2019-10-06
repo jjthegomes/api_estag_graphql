@@ -21,7 +21,9 @@ module.exports = {
     if (!req.isAuth) throw new Error("Unauthenticated");
 
     try {
-      const empresa = await Empresa.findOne({ usuario: req.usuarioId });
+      const empresa = await Empresa.findOne({
+        usuario: req.usuarioId
+      }).populate("usuario");
       return transformEmpresa(empresa);
     } catch (error) {
       console.log(error);
@@ -69,10 +71,10 @@ module.exports = {
         email: args.empresaInput.email
       });
 
-      if (existingEmpresa) throw new Error("Empresa já existe.");
+      if (!existingEmpresa) throw new Error("Empresa não existe.");
 
       const empresa = await Empresa.findOneAndUpdate(
-        { usuario: req.usuarioIdd },
+        { usuario: req.usuarioId },
         { ...args.empresaInput },
         { new: true }
       );

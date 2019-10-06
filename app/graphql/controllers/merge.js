@@ -136,6 +136,7 @@ export const transformEmpresa = empresa => {
   return {
     ...empresa._doc,
     _id: empresa.id,
+    usuario: usuario.bind(this, empresa.usuario),
     vagas: vagas.bind(this, empresa.vagas)
   };
 };

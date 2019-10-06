@@ -65,9 +65,9 @@ module.exports = {
       const result = await usuario.save();
 
       const token = await jwt.sign(
-        { usuarioId: usuario.id, email: usuario.email },
+        { id: usuario.id },
         process.env.AUTH_SECRET,
-        { expiresIn: "72h" }
+        { expiresIn: 1296000 }
       );
 
       const dataExpiracao = new Date();
@@ -108,9 +108,9 @@ module.exports = {
       }
 
       const token = await jwt.sign(
-        { usuarioId: usuario.id, email: usuario.email },
+        { id: usuario.id },
         process.env.AUTH_SECRET,
-        { expiresIn: "72h" }
+        { expiresIn: 1296000 }
       );
 
       return {
@@ -118,7 +118,7 @@ module.exports = {
         cliente: cliente,
         empresa: empresa,
         token: token,
-        tokenExpiration: 72
+        tokenExpiration: 1296000
       };
     } catch (error) {
       throw error;
